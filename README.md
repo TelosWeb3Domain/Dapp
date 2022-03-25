@@ -1,2 +1,3 @@
-# TLOSDapp
-Website Dapp
+# Website of: https://tlos.domains/
+
+The official website of the project includes html pages introducing js libraries and dapps connected to Metamask...
