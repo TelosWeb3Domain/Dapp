@@ -37,11 +37,25 @@
 	background-color: #6c2b95!important;
 	border-color: #6c2b95!important;
 }
+.warp-result .btn-success:hover{
+	border: none!important;
+}
+
+.warp-setavatar .btn-success {
+	background-color: #6c2b95!important;
+	border-color: #6c2b95!important;
+}
+
+.warp-setavatar .btn-success:hover {
+	border: none!important;
+}
+
 .btn-outline-success
 {
 	border: 1px solid #6c2b95!important;
 	color: #6c2b95!important;
 }
+
 .loading {color: #6c2b95!important;}
 
 .btn-outline-success:hover
@@ -54,7 +68,7 @@
 	text-align: center;
 	margin: 0 auto;
 	margin-bottom: 50px;
-	width: 1000px;
+	max-width: 1000px;
 	bolder: 1px solid #6c2b95
 }
 .tld
@@ -145,7 +159,7 @@
 
 .preview {
 	position: relative;
-	background: linear-gradient(45deg, #a061d0, #30d5c2);
+	background: linear-gradient(45deg, #875ce0, #090e83);
 	border-radius: 5px;
 	
 }
@@ -208,7 +222,7 @@
 }
 .warp-mydomains{
 	margin-top: 50px;
-	width: 1000px;
+	max-width: 1000px;
     margin: 0 auto;
 }
 
@@ -255,7 +269,7 @@
 .warp-setavatar .setavatar
 {
 	width: 500px; height: 500px;
-	background: linear-gradient(45deg, #a061d0, #30d5c2);
+	background: linear-gradient(45deg, #090e83, #8259dd);
 	background-position: center center;
 	position: relative;
 	margin: 0 auto;
@@ -382,7 +396,7 @@ div[data-notify="container"] {
 					<span style="cursor: pointer; margin-top: 10px;" class="btn btn-outline-danger btn-changenetwork">Switch Network</span>
 				  </span>
 				</div>
-				<div class="class-body">
+				<div class="class-body" style="display:none;">
 					<div class="form-search input-group">
 						<input type="text" class="form-control form-control-lg txtdomain" placeholder="Search tlos domain"/>
 						<div class="input-group-append">
@@ -825,12 +839,27 @@ div[data-notify="container"] {
 		});
 	}
 	
-	const confirmNFTAvatar = (obj) => {
+	const confirmNFTAvatar = async (obj) => {
 		var domain = obj.domain;
 		var tokenId = obj.tokenId;
 		var key = "avatar";
 		var base64 = $('.setyoupic img').attr('src');
 		if (base64 == ''){
+			return;
+		}
+		
+		var owner = '';
+		try {
+			owner = await contractFirst.methods.getOwner(domain).call();
+		} catch (e) {
+			//alert(e.toString());
+		}
+		
+		if (owner == ''){
+			return;
+		}
+		
+		if (owner !== currentAddress){
 			return;
 		}
 		
@@ -843,6 +872,8 @@ div[data-notify="container"] {
 		objnew.key = 'avatar';
 		objnew.tokenId = tokenId;
 		objnew.base64 = base64;
+		objnew.host = "https://app.tlos.domains";
+		
 
 		$.ajax({
 			type: "POST",
@@ -1070,7 +1101,7 @@ div[data-notify="container"] {
 					if (name == domainReverse){
 						btnlbl = "Default"
 					}
-					var temp = "<div class='mydomain-item'><a target='_blank' href='" + image + "'><img style='width: 100%;' src='" + image + "' /></a><div style='cursor:pointer; margin-top: 5px;' data-domain='" + name + "' class='btn btn-sm btn-outline-success btn-set-reverse'>" + btnlbl + "</div><div style='cursor:pointer; margin-top: 5px;display:none;' data-obj='" + JSON.stringify(obj) + "' class='btn btn-sm btn-outline-success btn-set-avatar'>Set Avatar</div></div>"
+					var temp = "<div class='mydomain-item'><a target='_blank' href='" + image + "'><img style='width: 100%;' src='" + image + "' /></a><div style='cursor:pointer; margin-top: 5px;' data-domain='" + name + "' class='btn btn-sm btn-outline-success btn-set-reverse'>" + btnlbl + "</div><div style='cursor:pointer; margin-top: 5px;' data-obj='" + JSON.stringify(obj) + "' class='btn btn-sm btn-outline-success btn-set-avatar'>Set Avatar</div></div>"
 					$('.mydomain-show').append(temp);
 				});
 			});
